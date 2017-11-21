@@ -5,7 +5,7 @@ scikit-learn
 Jinja2
 Werkzeug
 keras
-theano
+theano==0.7.0
 numpy
 lasagne
 h5py
