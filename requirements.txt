@@ -6,4 +6,3 @@ Werkzeug
 keras
 numpy
 h5py
-wsgiref
