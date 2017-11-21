@@ -1,6 +1,7 @@
 gunicorn
 Flask
 Flask-Compress
+scikit-learn
 Jinja2
 Werkzeug
 keras
