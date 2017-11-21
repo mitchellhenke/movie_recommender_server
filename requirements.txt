@@ -6,4 +6,5 @@ Jinja2
 Werkzeug
 keras
 numpy
+lasagne
 h5py
