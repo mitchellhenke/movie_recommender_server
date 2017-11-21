@@ -5,3 +5,6 @@ Jinja2
 Werkzeug
 distribute
 wsgiref
+h5py
+keras
+numpy
