@@ -1,0 +1,7 @@
+gunicorn
+Flask
+Flask-Compress
+Jinja2
+Werkzeug
+distribute
+wsgiref
