@@ -5,6 +5,7 @@ scikit-learn
 Jinja2
 Werkzeug
 keras
+theano
 numpy
 lasagne
 h5py
