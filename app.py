@@ -16,7 +16,7 @@ app = Flask(__name__)
 Compress(app)
 models = {}
 
-def rnn_model:
+def rnn_model():
     if 'rnn' not in models:
         updater = Adam(learning_rate = 0.001, beta1 = 0.9, beta2 = 0.999)
         target_selection=SelectTargets(n_targets=1, shuffle=False, bias=-1.0, determinist_test=True)
@@ -31,7 +31,7 @@ def rnn_model:
 
     return models['rnn']
 
-def model:
+def model():
     if 'rec' not in models:
         models['rec'] = load_model("./model/model.hf5", compile=False)
     return models['rec']
