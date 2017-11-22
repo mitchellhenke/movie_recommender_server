@@ -2,11 +2,9 @@ gunicorn
 Flask
 Flask-Compress
 scikit-learn
-Jinja2
 Werkzeug
 keras
 theano==0.7.0
 numpy
 tensorflow
 lasagne
-h5py
