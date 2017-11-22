@@ -6,7 +6,7 @@ import lasagne
 from keras.models import load_model
 from flask_compress import Compress
 from rnn_model.neural_networks.rnn_one_hot import RNNOneHot
-from rnn_model.neural_networks.helpers.data_handling import DataHandler
+from rnn_model.neural_networks.helpers.dummy_data_handling import DummyDataHandler
 from rnn_model.neural_networks.update_manager import Adam
 from rnn_model.neural_networks.target_selection import SelectTargets
 from rnn_model.neural_networks.sequence_noise import SequenceNoise
@@ -21,8 +21,8 @@ sequence_noise = SequenceNoise(dropout=0.0, swap=0.0, ratings_perturb=0.0, shuf=
 recurrent_layer = RecurrentLayers(layer_type='GRU', layers=[50], bidirectional=False, embedding_size=0)
 
 predictor = RNNOneHot(interactions_are_unique=True, max_length=30, diversity_bias=0.0, regularization=0.0, updater=updater, target_selection=target_selection, sequence_noise=sequence_noise, recurrent_layer=recurrent_layer, use_ratings_features=False, use_movies_features=False, use_users_features=False, batch_size=16)
-dataset = DataHandler(dirname="/home/mitch/ML/sequence-based-recommendations/data/")
-predictor.prepare_model(dataset)
+dummy_dataset = DummyDataHandler(n_items=10681)
+predictor.prepare_model(dummy_dataset)
 predictor.load("./rnn_model/model.999_nt1_nf")
 
 def rnn_predict(json):
