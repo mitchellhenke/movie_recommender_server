@@ -16,34 +16,24 @@ app = Flask(__name__)
 Compress(app)
 models = {}
 
-def rnn_model():
-    if 'rnn' not in models:
-        updater = Adam(learning_rate = 0.001, beta1 = 0.9, beta2 = 0.999)
-        target_selection=SelectTargets(n_targets=1, shuffle=False, bias=-1.0, determinist_test=True)
-        sequence_noise = SequenceNoise(dropout=0.0, swap=0.0, ratings_perturb=0.0, shuf=0.0, shuf_std=5.0)
-        recurrent_layer = RecurrentLayers(layer_type='GRU', layers=[50], bidirectional=False, embedding_size=0)
+updater = Adam(learning_rate = 0.001, beta1 = 0.9, beta2 = 0.999)
+target_selection=SelectTargets(n_targets=1, shuffle=False, bias=-1.0, determinist_test=True)
+sequence_noise = SequenceNoise(dropout=0.0, swap=0.0, ratings_perturb=0.0, shuf=0.0, shuf_std=5.0)
+recurrent_layer = RecurrentLayers(layer_type='GRU', layers=[50], bidirectional=False, embedding_size=0)
 
-        predictor = RNNOneHot(interactions_are_unique=True, max_length=30, diversity_bias=0.0, regularization=0.0, updater=updater, target_selection=target_selection, sequence_noise=sequence_noise, recurrent_layer=recurrent_layer, use_ratings_features=False, use_movies_features=False, use_users_features=False, batch_size=16)
-        dummy_dataset = DummyDataHandler(n_items=10681)
-        predictor.prepare_model(dummy_dataset)
-        predictor.load("./rnn_model/model.999_nt1_nf")
-        models['rnn'] = predictor
+predictor = RNNOneHot(interactions_are_unique=True, max_length=30, diversity_bias=0.0, regularization=0.0, updater=updater, target_selection=target_selection, sequence_noise=sequence_noise, recurrent_layer=recurrent_layer, use_ratings_features=False, use_movies_features=False, use_users_features=False, batch_size=16)
+dummy_dataset = DummyDataHandler(n_items=10681)
+predictor.prepare_model(dummy_dataset)
+predictor.load("./rnn_model/model.999_nt1_nf")
 
-    return models['rnn']
-
-def rec_model():
-    if 'rec' not in models:
-        models['rec'] = load_model("./model/model.hf5", compile=False)
-    return models['rec']
+rnn_model = predictor
+rec_model = load_model("./model/model.hf5", compile=False)
 
 def rnn_predict(json):
-    predictor = rnn_model()
-
     formatted = [[item['id'], item['rating']] for item in json]
-    return [x.item() for x in predictor.top_k_recommendations(formatted)]
+    return [x.item() for x in rnn_model.top_k_recommendations(formatted)]
 
 def ml_predict(json):
-    model = rec_model()
     ratings = np.zeros(10681)
     json_ids = [x['id'] for x in json]
     print('json ids', file=sys.stderr)
@@ -51,7 +41,7 @@ def ml_predict(json):
 
     for i in json:
         ratings[i['id']] = i['rating']
-    predictions = model.predict(np.expand_dims(ratings, 0))[0]
+    predictions = rec_model.predict(np.expand_dims(ratings, 0))[0]
     predictions = [{'id': i, 'predicted_rating': np.float64(x)} for i,x in enumerate(predictions)]
     predictions.sort(key= lambda x: x['predicted_rating'], reverse=True)
     returned_predictions = []
