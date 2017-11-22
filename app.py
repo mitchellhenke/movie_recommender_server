@@ -31,7 +31,7 @@ def rnn_model():
 
     return models['rnn']
 
-def model():
+def rec_model():
     if 'rec' not in models:
         models['rec'] = load_model("./model/model.hf5", compile=False)
     return models['rec']
@@ -43,7 +43,7 @@ def rnn_predict(json):
     return [x.item() for x in predictor.top_k_recommendations(formatted)]
 
 def ml_predict(json):
-    model = model()
+    model = rec_model()
     ratings = np.zeros(10681)
     json_ids = [x['id'] for x in json]
     print('json ids', file=sys.stderr)
