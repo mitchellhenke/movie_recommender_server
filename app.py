@@ -36,8 +36,6 @@ def rnn_predict(json):
 def ml_predict(json):
     ratings = np.zeros(10681)
     json_ids = [x['id'] for x in json]
-    print('json ids', file=sys.stderr)
-    print(json_ids, file=sys.stderr)
 
     for i in json:
         ratings[i['id']] = i['rating']
