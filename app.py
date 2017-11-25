@@ -22,7 +22,7 @@ sequence_noise = SequenceNoise(dropout=0.0, swap=0.0, ratings_perturb=0.0, shuf=
 recurrent_layer = RecurrentLayers(layer_type='GRU', layers=[50], bidirectional=False, embedding_size=0)
 
 predictor = RNNOneHot(interactions_are_unique=True, max_length=30, diversity_bias=0.0, regularization=0.0, updater=updater, target_selection=target_selection, sequence_noise=sequence_noise, recurrent_layer=recurrent_layer, use_ratings_features=False, use_movies_features=False, use_users_features=False, batch_size=16)
-dummy_dataset = DummyDataHandler(n_items=10681)
+dummy_dataset = DummyDataHandler(n_items=45843)
 predictor.prepare_model(dummy_dataset)
 predictor.load("./rnn_model/model.999_nt1_nf")
 
@@ -34,7 +34,7 @@ def rnn_predict(json):
     return [x.item() for x in rnn_model.top_k_recommendations(formatted)]
 
 def ml_predict(json):
-    ratings = np.zeros(10681)
+    ratings = np.zeros(45843)
     json_ids = [x['id'] for x in json]
 
     for i in json:
